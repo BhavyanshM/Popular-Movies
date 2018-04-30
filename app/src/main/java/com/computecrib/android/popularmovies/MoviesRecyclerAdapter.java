@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MoviesRecyclerAdapter extends RecyclerView.Adapter<MoviesRecyclerAdapter.Holder> {
@@ -21,6 +22,10 @@ public class MoviesRecyclerAdapter extends RecyclerView.Adapter<MoviesRecyclerAd
     public MoviesRecyclerAdapter(Context cont,List<Movie> movieList){
         this.movies = movieList;
         this.context = cont;
+    }
+
+    public void setMovies(List<Movie> newMovies){
+        this.movies = newMovies;
     }
 
     @Override
@@ -36,6 +41,7 @@ public class MoviesRecyclerAdapter extends RecyclerView.Adapter<MoviesRecyclerAd
         Picasso.with(context)
                 .load("http://image.tmdb.org/t/p/w342" + movie.getPosterPath())
                 .placeholder(R.drawable.movies)
+                .error(R.drawable.movies)
                 .into(holder.movieImageView);
     }
 

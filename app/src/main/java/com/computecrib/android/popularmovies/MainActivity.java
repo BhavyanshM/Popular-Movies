@@ -62,11 +62,12 @@ public class MainActivity extends AppCompatActivity {
 
                 movies = JsonUtilities.getMoviesFromJSON(s);
                 for (Movie movie : movies)
-                Log.e("RESPONSE:", movie.getPosterPath()+"\n");
+                    Log.e("RESPONSE:", movie.getPosterPath()+"\n");
+                adapter.setMovies(movies);
                 adapter.notifyDataSetChanged();
-                adapter = new MoviesRecyclerAdapter(getApplicationContext(), movies);
-                moviesRecyclerView.setAdapter(adapter);
-                moviesRecyclerView.invalidate();
+//                adapter = new MoviesRecyclerAdapter(getApplicationContext(), movies);
+//                moviesRecyclerView.setAdapter(adapter);
+//                moviesRecyclerView.invalidate();
             }
         }
     }

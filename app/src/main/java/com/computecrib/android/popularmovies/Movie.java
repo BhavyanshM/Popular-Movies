@@ -1,8 +1,5 @@
 package com.computecrib.android.popularmovies;
 
-/**
- * Created by bhavy on 4/28/2018.
- */
 
 public class Movie {
     private String title;

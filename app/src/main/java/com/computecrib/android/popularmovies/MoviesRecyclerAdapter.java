@@ -6,7 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -29,12 +32,16 @@ public class MoviesRecyclerAdapter extends RecyclerView.Adapter<MoviesRecyclerAd
 
     @Override
     public void onBindViewHolder(Holder holder, int position) {
-
+        Movie movie = movies.get(position);
+        Picasso.with(context)
+                .load("http://image.tmdb.org/t/p/w342" + movie.getPosterPath())
+                .placeholder(R.drawable.movies)
+                .into(holder.movieImageView);
     }
 
     @Override
     public int getItemCount() {
-        return 50;
+        return movies.size();
     }
 
     public class Holder extends RecyclerView.ViewHolder implements RecyclerView.OnClickListener{
@@ -43,6 +50,7 @@ public class MoviesRecyclerAdapter extends RecyclerView.Adapter<MoviesRecyclerAd
         private Holder(View itemView) {
             super(itemView);
             movieImageView = (ImageView) itemView.findViewById(R.id.iv_movie_item);
+            itemView.setOnClickListener(this);
         }
 
         @Override

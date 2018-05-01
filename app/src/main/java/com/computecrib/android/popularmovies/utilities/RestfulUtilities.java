@@ -13,14 +13,12 @@ import java.util.Scanner;
 
 public class RestfulUtilities {
 
-    private final static String BASE_REST_URL = "https://api.themoviedb.org/3/movie";
-    private final static String PARAM_API_KEY = "api_key";
-    final static String apiKey = "";
 
-    public static URL buildUrlWithKey(String pathParam) {
-        Uri builtUri = Uri.parse(BASE_REST_URL).buildUpon()
+
+    public static URL buildUrlWithKey(String baseRestURL, String pathParam, String paramAPIKey, String apiKey) {
+        Uri builtUri = Uri.parse(baseRestURL).buildUpon()
                 .appendPath(pathParam)
-                .appendQueryParameter(PARAM_API_KEY, apiKey)
+                .appendQueryParameter(paramAPIKey, apiKey)
                 .build();
 
         URL url = null;

@@ -15,4 +15,9 @@
     <string name="network_unavailable_error">Network Connection Unavailable</string>
     <string name="path_param_top_rated">top_rated</string>
     <string name="path_param_popular">popular</string>
+    <string name="base_rest_url">https://api.themoviedb.org/3/movie</string>
+    <string name="param_api_key">api_key</string>
+    <string name="popular_label">Popular</string>
+    <string name="top_rated_label">Top Rated</string>
+    <string name="api_key">PLEASE_INSERT_API_KEY_HERE</string>
 </resources>

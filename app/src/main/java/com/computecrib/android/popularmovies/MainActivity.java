@@ -34,6 +34,12 @@ public class MainActivity extends AppCompatActivity {
     @BindString(R.string.path_param_popular) String PATH_PARAM_POPULAR;
 
     @BindView(R.id.rv_movies) RecyclerView moviesRecyclerView;
+    @BindView(R.id.tv_sort_order) TextView mSortOrderTextView;
+
+    @BindString(R.string.base_rest_url) String BASE_REST_URL;
+    @BindString(R.string.param_api_key) String PARAM_API_KEY;
+    @BindString(R.string.api_key) String API_KEY;
+
 
     private String pathParam;
     private List<Movie> movies;
@@ -45,7 +51,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        URL theMovieURL = RestfulUtilities.buildUrlWithKey(PATH_PARAM_POPULAR);
+        URL theMovieURL = buildTheMovieURL(PATH_PARAM_POPULAR);
+        mSortOrderTextView.setText(R.string.popular_label);
         if(isConnected()){
             new GetMovieTask().execute(theMovieURL);
         }else{
@@ -61,6 +68,15 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public URL buildTheMovieURL(String pathParam){
+        return RestfulUtilities.buildUrlWithKey(
+                BASE_REST_URL,
+                pathParam,
+                PARAM_API_KEY,
+                API_KEY
+        );
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
@@ -74,7 +90,8 @@ public class MainActivity extends AppCompatActivity {
         URL theMovieURL;
         switch (item.getItemId()){
             case R.id.option_sort_top_rated:
-                theMovieURL = RestfulUtilities.buildUrlWithKey(PATH_PARAM_TOP_RATED);
+                theMovieURL = buildTheMovieURL(PATH_PARAM_TOP_RATED);
+                mSortOrderTextView.setText(R.string.top_rated_label);
                 if(isConnected()){
                     new GetMovieTask().execute(theMovieURL);
                 }else{
@@ -82,7 +99,8 @@ public class MainActivity extends AppCompatActivity {
                 }
                 break;
             case R.id.option_sort_popularity:
-                theMovieURL = RestfulUtilities.buildUrlWithKey(PATH_PARAM_POPULAR);
+                theMovieURL = buildTheMovieURL(PATH_PARAM_POPULAR);
+                mSortOrderTextView.setText(R.string.popular_label);
                 if(isConnected()){
                     new GetMovieTask().execute(theMovieURL);
                 }else{

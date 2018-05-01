@@ -1,5 +1,8 @@
 package com.computecrib.android.popularmovies.utilities;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,8 +13,8 @@ import java.util.Scanner;
 
 public class RestfulUtilities {
 
-    final static String BASE_REST_URL = "https://api.themoviedb.org/3/movie";
-    final static String PARAM_API_KEY = "api_key";
+    private final static String BASE_REST_URL = "https://api.themoviedb.org/3/movie";
+    private final static String PARAM_API_KEY = "api_key";
     final static String apiKey = "";
 
     public static URL buildUrlWithKey(String pathParam) {
@@ -30,6 +33,10 @@ public class RestfulUtilities {
         return url;
     }
 
+
+    //Inspired by Lesson 5 from Github Repo Search Exercise - T02.05-Exercise-CreateAsyncTask
+    //Date: 1 May 2018
+    //Link to Repo: https://github.com/udacity/ud851-Exercises/blob/student/Lesson02-GitHub-Repo-Search/T02.05-Exercise-CreateAsyncTask/app/src/main/java/com/example/android/datafrominternet/utilities/NetworkUtils.java
     public static String getMovieResponse(URL url) throws IOException {
         HttpURLConnection RESTConnection = (HttpURLConnection) url.openConnection();
         try {

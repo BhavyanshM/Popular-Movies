@@ -8,23 +8,10 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="146dp"
         tools:ignore="MissingConstraints">
-
-
-        <ImageView
-            android:id="@+id/iv_movie_small"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/iv_movie_original"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="-16dp"
-            android:translationZ="1dp"
-            app:srcCompat="@drawable/ic_launcher_background"
-            tools:ignore="VectorDrawableCompat" />
 
 
         <ImageView
@@ -39,7 +26,23 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_launcher_background"
-            tools:ignore="VectorDrawableCompat" />
+            tools:ignore="VectorDrawableCompat"
+            android:contentDescription="@string/movie_details_top_content_description" />
+
+        <ImageView
+            android:id="@+id/iv_movie_small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/iv_movie_original"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="-16dp"
+            app:srcCompat="@drawable/ic_launcher_background"
+            tools:ignore="VectorDrawableCompat"
+            android:contentDescription="@string/movie_poster_content_description" />
+
+
+
 
         <TextView
             android:id="@+id/tv_rating_label"
@@ -48,7 +51,7 @@
             android:layout_alignStart="@+id/tv_movie_release_date"
             android:layout_below="@+id/tv_movie_release_date"
             android:layout_marginTop="8dp"
-            android:text="Rating"
+            android:text="@string/rating_text"
             android:textColor="#000000"
             app:layout_constraintStart_toEndOf="@+id/iv_movie_original"
             app:layout_constraintTop_toBottomOf="@+id/iv_movie_small" />
@@ -59,7 +62,7 @@
             android:layout_height="wrap_content"
             android:layout_alignStart="@+id/tv_rating_label"
             android:layout_below="@+id/tv_rating_label"
-            android:text="9.2"
+            tools:text="9.2"
             app:layout_constraintStart_toEndOf="@+id/iv_movie_original"
             app:layout_constraintTop_toBottomOf="@+id/tv_rating_label" />
 
@@ -72,7 +75,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:layout_toEndOf="@+id/iv_movie_small"
-            android:text="Title of the Movie"
+            android:text="@string/title_text"
             android:textColor="#000000"
             android:textSize="16sp" />
 
@@ -82,7 +85,7 @@
             android:layout_height="wrap_content"
             android:layout_alignStart="@+id/tv_movie_name"
             android:layout_below="@+id/tv_movie_name"
-            android:text="Release Date" />
+            android:text="@string/release_date_text" />
 
         <TextView
             android:id="@+id/tv_description_Label"
@@ -91,7 +94,7 @@
             android:layout_alignStart="@+id/iv_movie_small"
             android:layout_below="@+id/iv_movie_small"
             android:layout_marginTop="16dp"
-            android:text="Overview"
+            android:text="@string/overview_text"
             android:textColor="#000000" />
 
         <TextView
@@ -103,7 +106,7 @@
             android:layout_marginBottom="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginTop="8dp"
-            android:text="Lorem Ipsum Dolerey Mi Fasola Ti" />
+            tools:text="Lorem Ipsum Dolerey Mi Fasola Ti" />
     </RelativeLayout>
 
 </ScrollView>

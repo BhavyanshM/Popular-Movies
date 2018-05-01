@@ -1,3 +1,18 @@
 <resources>
     <string name="app_name">Popular Movies</string>
+    <string name="title_label">TITLE</string>
+    <string name="description_label">DESCRIPTION</string>
+    <string name="rating_label">RATING</string>
+    <string name="release_date_label">RELEASE_DATE</string>
+    <string name="poster_path_label">POSTER_PATH</string>
+    <string name="rating_text">Rating</string>
+    <string name="title_text">Title of the Movie</string>
+    <string name="release_date_text">Release Date</string>
+    <string name="overview_text">Overview</string>
+    <string name="movie_poster_content_description">Movie Poster</string>
+    <string name="movie_details_top_content_description">Color Space on Top of Activity</string>
+    <string name="base_image_url">http://image.tmdb.org/t/p/w342</string>
+    <string name="network_unavailable_error">Network Connection Unavailable</string>
+    <string name="path_param_top_rated">top_rated</string>
+    <string name="path_param_popular">popular</string>
 </resources>

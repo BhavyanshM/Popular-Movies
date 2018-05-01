@@ -40,7 +40,7 @@ public class MoviesRecyclerAdapter extends RecyclerView.Adapter<MoviesRecyclerAd
     public void onBindViewHolder(Holder holder, int position) {
         Movie movie = movies.get(position);
         Picasso.with(context)
-                .load("http://image.tmdb.org/t/p/w342" + movie.getPosterPath())
+                .load(context.getString(R.string.base_image_url) + movie.getPosterPath())
                 .placeholder(R.drawable.movies)
                 .error(R.drawable.movies)
                 .into(holder.movieImageView);
@@ -64,11 +64,11 @@ public class MoviesRecyclerAdapter extends RecyclerView.Adapter<MoviesRecyclerAd
         public void onClick(View view) {
             Context viewContext = view.getContext();
             Intent intent = new Intent(viewContext, MovieDetailsActivity.class);
-            intent.putExtra("TITLE", movies.get(getAdapterPosition()).getTitle());
-            intent.putExtra("RELEASE_DATE", movies.get(getAdapterPosition()).getReleaseDate());
-            intent.putExtra("DESCRIPTION", movies.get(getAdapterPosition()).getOverview());
-            intent.putExtra("RATING", movies.get(getAdapterPosition()).getRating());
-            intent.putExtra("POSTER_PATH", movies.get(getAdapterPosition()).getPosterPath());
+            intent.putExtra(viewContext.getString(R.string.title_label), movies.get(getAdapterPosition()).getTitle());
+            intent.putExtra(viewContext.getString(R.string.release_date_label), movies.get(getAdapterPosition()).getReleaseDate());
+            intent.putExtra(viewContext.getString(R.string.description_label), movies.get(getAdapterPosition()).getOverview());
+            intent.putExtra(viewContext.getString(R.string.rating_label), movies.get(getAdapterPosition()).getRating());
+            intent.putExtra(viewContext.getString(R.string.poster_path_label), movies.get(getAdapterPosition()).getPosterPath());
             viewContext.startActivity(intent);
         }
     }

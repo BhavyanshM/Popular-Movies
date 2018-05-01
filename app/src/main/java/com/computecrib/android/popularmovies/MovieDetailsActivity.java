@@ -3,6 +3,9 @@ package com.computecrib.android.popularmovies;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -26,12 +29,14 @@ public class MovieDetailsActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         Intent theSourceIntent = getIntent();
-        mTitleTextView.setText(theSourceIntent.getStringExtra("TITLE"));
-        mDescriptionTextView.setText(theSourceIntent.getStringExtra("DESCRIPTION"));
-        mRatingTextView.setText(theSourceIntent.getStringExtra("RATING"));
-        mReleaseDateTextView.setText(theSourceIntent.getStringExtra("RELEASE_DATE"));
+        mTitleTextView.setText(theSourceIntent.getStringExtra(getString(R.string.title_label)));
+        mDescriptionTextView.setText(theSourceIntent.getStringExtra(getString(R.string.description_label)));
+        mRatingTextView.setText(theSourceIntent.getStringExtra(getString(R.string.rating_label)));
+        mReleaseDateTextView.setText(theSourceIntent.getStringExtra(getString(R.string.release_date_label)));
         Picasso.with(this)
-                .load("http://image.tmdb.org/t/p/w342" + theSourceIntent.getStringExtra("POSTER_PATH"))
+                .load(getApplicationContext().getString(R.string.base_image_url) + theSourceIntent.getStringExtra(getString(R.string.poster_path_label)))
                 .into(mMovieSmallImageView);
     }
+
+
 }

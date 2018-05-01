@@ -1,6 +1,7 @@
 package com.computecrib.android.popularmovies;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -61,7 +62,14 @@ public class MoviesRecyclerAdapter extends RecyclerView.Adapter<MoviesRecyclerAd
 
         @Override
         public void onClick(View view) {
-            Toast.makeText(context, "Item Was Clicked!", Toast.LENGTH_SHORT).show();
+            Context viewContext = view.getContext();
+            Intent intent = new Intent(viewContext, MovieDetailsActivity.class);
+            intent.putExtra("TITLE", movies.get(getAdapterPosition()).getTitle());
+            intent.putExtra("RELEASE_DATE", movies.get(getAdapterPosition()).getReleaseDate());
+            intent.putExtra("DESCRIPTION", movies.get(getAdapterPosition()).getOverview());
+            intent.putExtra("RATING", movies.get(getAdapterPosition()).getRating());
+            intent.putExtra("POSTER_PATH", movies.get(getAdapterPosition()).getPosterPath());
+            viewContext.startActivity(intent);
         }
     }
 }

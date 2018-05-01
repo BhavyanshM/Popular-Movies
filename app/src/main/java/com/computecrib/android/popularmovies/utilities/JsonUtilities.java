@@ -15,6 +15,7 @@ public class JsonUtilities {
         String overview;
         String releaseDate;
         String movieId;
+        String rating;
         ArrayList<Movie> movies;
         try {
             JSONObject responseObject = new JSONObject(json);
@@ -24,6 +25,7 @@ public class JsonUtilities {
             for(int i = 0; i<resultsJSONArray.length(); i++){
                 JSONObject movieObject = resultsJSONArray.getJSONObject(i);
                 title = movieObject.getString("title");
+                rating = movieObject.getString("vote_average");
                 posterPath = movieObject.getString("poster_path");
                 overview = movieObject.getString("overview");
                 releaseDate = movieObject.getString("release_date");
@@ -33,7 +35,8 @@ public class JsonUtilities {
                         posterPath,
                         overview,
                         releaseDate,
-                        Integer.parseInt(movieId)
+                        Integer.parseInt(movieId),
+                        rating
                 );
                 movies.add(movie);
             }

@@ -107,6 +107,20 @@
             android:layout_marginEnd="16dp"
             android:layout_marginTop="8dp"
             tools:text="Lorem Ipsum Dolerey Mi Fasola Ti" />
+
+        <ImageButton
+            android:id="@+id/ib_fav_button"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:foregroundGravity="top"
+            android:tint="#000000"
+            android:background="@drawable/fav_button_off"
+            app:srcCompat="@android:drawable/star_off" />
+
     </RelativeLayout>
 
 </ScrollView>

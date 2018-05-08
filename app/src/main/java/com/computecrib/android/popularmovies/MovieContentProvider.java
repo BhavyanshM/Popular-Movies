@@ -41,7 +41,25 @@ public class MovieContentProvider extends ContentProvider{
     @Nullable
     @Override
     public Cursor query(@NonNull Uri uri, @Nullable String[] strings, @Nullable String s, @Nullable String[] strings1, @Nullable String s1) {
-        return null;
+        final SQLiteDatabase db = mMovieDbHelper.getReadableDatabase();
+        int match = sUriMatcher.match(uri);
+        Cursor retCursor;
+        switch (match){
+            case MOVIES:
+                retCursor = db.query(MovieContract.MovieEntry.TABLE_NAME,
+                        strings,
+                        s,
+                        strings1,
+                        null,
+                        null,
+                        s1);
+                break;
+            default:
+                throw new UnsupportedOperationException("Unknown URI: " + uri.toString());
+        }
+        retCursor.setNotificationUri(getContext().getContentResolver(), uri);
+
+        return retCursor;
     }
 
     @Nullable

@@ -19,5 +19,6 @@
     <string name="param_api_key">api_key</string>
     <string name="popular_label">Popular</string>
     <string name="top_rated_label">Top Rated</string>
+    <string name="favorite_sort_label">Favorite</string>
     <string name="api_key">PLEASE_INSERT_YOUR_KEY_HERE</string>
 </resources>

@@ -1,7 +1,11 @@
 package com.computecrib.android.popularmovies;
 
 import android.annotation.SuppressLint;
+import android.app.LoaderManager;
 import android.content.Context;
+import android.content.CursorLoader;
+import android.content.Loader;
+import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -28,7 +32,7 @@ import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
 
     @BindString(R.string.path_param_top_rated) String PATH_PARAM_TOP_RATED;
     @BindString(R.string.path_param_popular) String PATH_PARAM_POPULAR;
@@ -44,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
     private String pathParam;
     private List<Movie> movies;
     private MoviesRecyclerAdapter adapter;
+    private static final int FAVORITE_MOVIES_LOADER = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,6 +112,9 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(this, R.string.network_unavailable_error, Toast.LENGTH_LONG).show();
                 }
                 break;
+            case R.id.option_sort_favorites:
+                mSortOrderTextView.setText(R.string.favorite_sort_label);
+                getLoaderManager().initLoader(FAVORITE_MOVIES_LOADER, null, this);
         }
         return true;
     }
@@ -122,6 +130,39 @@ public class MainActivity extends AppCompatActivity {
             networkStatus = cm.getActiveNetworkInfo();
         }
         return networkStatus != null && networkStatus.isConnected();
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        if(id==FAVORITE_MOVIES_LOADER){
+            return new CursorLoader(this, MovieContract.MovieEntry.CONTENT_URI, null, null, null, null );
+        }
+        return null;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+        if(cursor!=null && cursor.getCount()>0){
+            Movie favMovie;
+            List<Movie> favMovies = new ArrayList<Movie>();
+            while(cursor.moveToNext()){
+                favMovie = new Movie(
+                        cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_NAME)),
+                        cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_POSTER_PATH)),
+                        cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_OVERVIEW)),
+                        cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_RELEASE_DATE)),
+                        cursor.getInt(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_RATING)),
+                        cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_RATING))
+                );
+                favMovies.add(favMovie);
+            }
+            adapter.setMovies(favMovies);
+            adapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -144,8 +185,8 @@ public class MainActivity extends AppCompatActivity {
             if(s!=null && !s.equals("")){
 
                 movies = JsonUtilities.getMoviesFromJSON(s);
-                for (Movie movie : movies)
-                    Log.e("RESPONSE:", movie.getPosterPath()+"\n");
+//                for (Movie movie : movies)
+//                    Log.e("RESPONSE:", movie.getPosterPath()+"\n");
                 adapter.setMovies(movies);
                 adapter.notifyDataSetChanged();
 //                adapter = new MoviesRecyclerAdapter(getApplicationContext(), movies);

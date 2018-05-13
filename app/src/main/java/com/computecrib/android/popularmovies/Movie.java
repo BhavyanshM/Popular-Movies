@@ -7,9 +7,9 @@ public class Movie {
     private String overview;
     private String releaseDate;
     private String rating;
-    private int movieId;
+    private String movieId;
 
-    public Movie(String title, String posterPath, String overview, String releaseDate, int movieId, String voteAverage) {
+    public Movie(String title, String posterPath, String overview, String releaseDate, String movieId, String voteAverage) {
         this.title = title;
         this.posterPath = posterPath;
         this.overview = overview;
@@ -38,7 +38,7 @@ public class Movie {
         return releaseDate;
     }
 
-    public int getMovieId() {
+    public String getMovieId() {
         return movieId;
     }
 

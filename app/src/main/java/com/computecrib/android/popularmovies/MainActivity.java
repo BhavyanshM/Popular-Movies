@@ -56,15 +56,15 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        movies = new ArrayList<>();
         URL theMovieURL = buildTheMovieURL(PATH_PARAM_POPULAR);
         mSortOrderTextView.setText(R.string.popular_label);
-        if(isConnected()){
+        if(RestfulUtilities.isConnected((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE))){
             new GetMovieTask().execute(theMovieURL);
         }else{
             Toast.makeText(this, R.string.network_unavailable_error, Toast.LENGTH_LONG).show();
         }
 
-        movies = new ArrayList<>();
         GridLayoutManager grid = new GridLayoutManager(this, 2);
 
         moviesRecyclerView.setLayoutManager(grid);
@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             case R.id.option_sort_top_rated:
                 theMovieURL = buildTheMovieURL(PATH_PARAM_TOP_RATED);
                 mSortOrderTextView.setText(R.string.top_rated_label);
-                if(isConnected()){
+                if(RestfulUtilities.isConnected((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE))){
                     new GetMovieTask().execute(theMovieURL);
                 }else{
                     Toast.makeText(this, R.string.network_unavailable_error, Toast.LENGTH_LONG).show();
@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             case R.id.option_sort_popularity:
                 theMovieURL = buildTheMovieURL(PATH_PARAM_POPULAR);
                 mSortOrderTextView.setText(R.string.popular_label);
-                if(isConnected()){
+                if(RestfulUtilities.isConnected((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE))){
                     new GetMovieTask().execute(theMovieURL);
                 }else{
                     Toast.makeText(this, R.string.network_unavailable_error, Toast.LENGTH_LONG).show();
@@ -119,18 +119,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         return true;
     }
 
-    //Inspired by StackOverflow thread:
-    //https://stackoverflow.com/questions/4238921/detect-whether-there-is-an-internet-connection-available-on-android
-    //Date: 1 May 2018
-    private boolean isConnected() {
-        ConnectivityManager cm
-                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkStatus = null;
-        if (cm != null) {
-            networkStatus = cm.getActiveNetworkInfo();
-        }
-        return networkStatus != null && networkStatus.isConnected();
-    }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
@@ -151,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                         cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_POSTER_PATH)),
                         cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_OVERVIEW)),
                         cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_RELEASE_DATE)),
-                        cursor.getInt(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_RATING)),
+                        cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_ID)),
                         cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_RATING))
                 );
                 favMovies.add(favMovie);
@@ -183,15 +171,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         @Override
         protected void onPostExecute(String s) {
             if(s!=null && !s.equals("")){
-
                 movies = JsonUtilities.getMoviesFromJSON(s);
-//                for (Movie movie : movies)
-//                    Log.e("RESPONSE:", movie.getPosterPath()+"\n");
                 adapter.setMovies(movies);
                 adapter.notifyDataSetChanged();
-//                adapter = new MoviesRecyclerAdapter(getApplicationContext(), movies);
-//                moviesRecyclerView.setAdapter(adapter);
-//                moviesRecyclerView.invalidate();
             }
         }
     }

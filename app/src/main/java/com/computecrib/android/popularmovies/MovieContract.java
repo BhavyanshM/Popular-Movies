@@ -11,6 +11,7 @@ public class MovieContract {
 
     public static final class MovieEntry implements BaseColumns{
         public static final String TABLE_NAME = "movies";
+        public static final String COLUMN_MOVIE_ID = "id";
         public static final String COLUMN_MOVIE_NAME = "movieName";
         public static final String COLUMN_RELEASE_DATE = "releaseDate";
         public static final String COLUMN_POSTER_PATH = "posterPath";

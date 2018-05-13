@@ -64,6 +64,7 @@ public class MoviesRecyclerAdapter extends RecyclerView.Adapter<MoviesRecyclerAd
         public void onClick(View view) {
             Context viewContext = view.getContext();
             Intent intent = new Intent(viewContext, MovieDetailsActivity.class);
+            intent.putExtra(viewContext.getString(R.string.id_label), movies.get(getAdapterPosition()).getMovieId());
             intent.putExtra(viewContext.getString(R.string.title_label), movies.get(getAdapterPosition()).getTitle());
             intent.putExtra(viewContext.getString(R.string.release_date_label), movies.get(getAdapterPosition()).getReleaseDate());
             intent.putExtra(viewContext.getString(R.string.description_label), movies.get(getAdapterPosition()).getOverview());

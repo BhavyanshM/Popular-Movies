@@ -1,5 +1,7 @@
 package com.computecrib.android.popularmovies.utilities;
 
+import android.util.Log;
+
 import com.computecrib.android.popularmovies.Movie;
 
 import org.json.JSONArray;
@@ -17,6 +19,7 @@ public class JsonUtilities {
         String movieId;
         String rating;
         ArrayList<Movie> movies;
+
         try {
             JSONObject responseObject = new JSONObject(json);
             JSONArray resultsJSONArray = responseObject.getJSONArray("results");
@@ -35,7 +38,7 @@ public class JsonUtilities {
                         posterPath,
                         overview,
                         releaseDate,
-                        Integer.parseInt(movieId),
+                        movieId,
                         rating
                 );
                 movies.add(movie);
@@ -43,6 +46,26 @@ public class JsonUtilities {
 
 
             return movies;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static ArrayList<String> getTrailersFromJSON(String json){
+        ArrayList<String> trailers;
+        try {
+            JSONObject responseObject = new JSONObject(json);
+            JSONArray resultsJSONArray = responseObject.getJSONArray("results");
+            trailers = new ArrayList<>();
+
+            for(int i = 0; i<resultsJSONArray.length(); i++){
+                JSONObject trailerObject = resultsJSONArray.getJSONObject(i);
+                String trailer = trailerObject.getString("key");
+                trailers.add(trailer);
+            }
+
+            return trailers;
         }catch (Exception e){
             e.printStackTrace();
         }

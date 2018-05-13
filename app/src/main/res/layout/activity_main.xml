@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingBottom="8dp"
     tools:context="com.computecrib.android.popularmovies.MainActivity">
 
     <TextView
@@ -21,7 +22,8 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_movies"
         android:layout_width="match_parent"
-        android:layout_height="504dp"
-        app:layout_constraintTop_toBottomOf="@+id/tv_sort_order" />
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/tv_sort_order"
+        />
 
 </android.support.constraint.ConstraintLayout>

@@ -1,13 +1,21 @@
 package com.computecrib.android.popularmovies;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -17,8 +25,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.computecrib.android.popularmovies.utilities.JsonUtilities;
+import com.computecrib.android.popularmovies.utilities.RestfulUtilities;
 import com.squareup.picasso.Picasso;
 
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+
+import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -30,6 +45,13 @@ public class MovieDetailsActivity extends AppCompatActivity {
     @BindView(R.id.tv_movie_rating) TextView mRatingTextView;
     @BindView(R.id.tv_movie_release_date) TextView mReleaseDateTextView;
     @BindView(R.id.ib_fav_button) ImageButton mFavButton;
+    @BindView(R.id.rv_trailers) RecyclerView mTrailersRecyclerView;
+
+    @BindString(R.string.base_rest_url) String BASE_REST_URL;
+    @BindString(R.string.param_api_key) String PARAM_API_KEY;
+    @BindString(R.string.api_key) String API_KEY;
+    @BindString(R.string.value_trailers) String paramValueTrailers;
+
     private Boolean isFavorite;
 
     private String titleText;
@@ -37,16 +59,31 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private String ratingText;
     private String releaseDateText;
     private String posterPathText;
+    private String movieId;
+
+    private List<String> trailers;
+    private TrailersRecyclerAdapter trailerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_details);
         ButterKnife.bind(this);
+        Intent theSourceIntent = getIntent();
+
+        trailers = new ArrayList<>();
+        movieId = theSourceIntent.getStringExtra(getString(R.string.id_label));
+        Log.e("WHERE",(movieId + "/" + paramValueTrailers));
+        URL theTrailerURL = buildTheTrailerURL(movieId, paramValueTrailers);
+        if(RestfulUtilities.isConnected((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE))){
+            new GetTrailerTask().execute(theTrailerURL);
+        }else{
+            Toast.makeText(this, R.string.network_unavailable_error, Toast.LENGTH_LONG).show();
+        }
 
         isFavorite = false;
 
-        Intent theSourceIntent = getIntent();
+
         mTitleTextView.setText(theSourceIntent.getStringExtra(getString(R.string.title_label)));
         mDescriptionTextView.setText(theSourceIntent.getStringExtra(getString(R.string.description_label)));
         mRatingTextView.setText(theSourceIntent.getStringExtra(getString(R.string.rating_label)));
@@ -74,6 +111,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
                     cv.put(MovieContract.MovieEntry.COLUMN_RATING, ratingText);
                     cv.put(MovieContract.MovieEntry.COLUMN_RELEASE_DATE, releaseDateText);
                     cv.put(MovieContract.MovieEntry.COLUMN_POSTER_PATH, posterPathText);
+                    cv.put(MovieContract.MovieEntry.COLUMN_MOVIE_ID, movieId);
 
                     Uri uri = getContentResolver().insert(MovieContract.MovieEntry.CONTENT_URI, cv);
 
@@ -87,6 +125,46 @@ public class MovieDetailsActivity extends AppCompatActivity {
             }
         });
 
+        trailerAdapter = new TrailersRecyclerAdapter(this, trailers);
+        mTrailersRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        mTrailersRecyclerView.setAdapter(trailerAdapter);
+    }
+
+    public URL buildTheTrailerURL(String pathParam1, String pathParam2){
+        return RestfulUtilities.buildTrailerUrlWithKey(
+                BASE_REST_URL,
+                pathParam1,
+                pathParam2,
+                PARAM_API_KEY,
+                API_KEY
+        );
+    }
+
+
+
+    @SuppressLint("StaticFieldLeak")
+    public class GetTrailerTask extends AsyncTask<URL, Void, String> {
+
+        @Override
+        protected String doInBackground(URL... urls) {
+            URL fullURL = urls[0];
+            String theMovieResults = null;
+            try {
+                theMovieResults = RestfulUtilities.getMovieResponse(fullURL);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            return theMovieResults;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            if(s!=null && !s.equals("")){
+                trailers = JsonUtilities.getTrailersFromJSON(s);
+                trailerAdapter.setTrailers(trailers);
+                trailerAdapter.notifyDataSetChanged();
+            }
+        }
     }
 
 

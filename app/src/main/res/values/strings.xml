@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Popular Movies</string>
     <string name="title_label">TITLE</string>
+    <string name="id_label">ID</string>
     <string name="description_label">DESCRIPTION</string>
     <string name="rating_label">RATING</string>
     <string name="release_date_label">RELEASE_DATE</string>
@@ -20,5 +21,11 @@
     <string name="popular_label">Popular</string>
     <string name="top_rated_label">Top Rated</string>
     <string name="favorite_sort_label">Favorite</string>
+    <string name="the_favorite_button_description">theFavoriteButton</string>
+    <string name="trailer_thumbnail">trailerThumbnail</string>
+    <string name="base_trailer_image_url">https://img.youtube.com/vi/</string>
+    <string name="trailer_image_file_name">/0.jpg</string>
+    <string name="value_trailers">videos</string>
+    <string name="base_trailer_youtube_url">http://www.youtube.com/watch?v=</string>
     <string name="api_key">PLEASE_INSERT_YOUR_KEY_HERE</string>
 </resources>

@@ -108,6 +108,15 @@
             android:layout_marginTop="8dp"
             tools:text="Lorem Ipsum Dolerey Mi Fasola Ti" />
 
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/rv_trailers"
+                android:orientation="horizontal"
+                android:layout_below="@id/tv_movie_description">
+            </android.support.v7.widget.RecyclerView>
+
+
         <ImageButton
             android:id="@+id/ib_fav_button"
             android:layout_width="40dp"
@@ -119,8 +128,10 @@
             android:foregroundGravity="top"
             android:tint="#000000"
             android:background="@drawable/fav_button_off"
-            app:srcCompat="@android:drawable/star_off" />
+            app:srcCompat="@android:drawable/star_off"
+            android:contentDescription="@string/the_favorite_button_description"/>
 
     </RelativeLayout>
+
 
 </ScrollView>

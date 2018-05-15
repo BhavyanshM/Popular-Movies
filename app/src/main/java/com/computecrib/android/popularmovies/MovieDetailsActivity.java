@@ -51,6 +51,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
     @BindString(R.string.param_api_key) String PARAM_API_KEY;
     @BindString(R.string.api_key) String API_KEY;
     @BindString(R.string.value_trailers) String paramValueTrailers;
+    @BindString(R.string.value_reviews) String paramValueReviews;
 
     private Boolean isFavorite;
 
@@ -62,6 +63,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private String movieId;
 
     private List<String> trailers;
+    private List<String> reviews;
     private TrailersRecyclerAdapter trailerAdapter;
 
     @Override
@@ -72,11 +74,14 @@ public class MovieDetailsActivity extends AppCompatActivity {
         Intent theSourceIntent = getIntent();
 
         trailers = new ArrayList<>();
+        reviews = new ArrayList<>();
         movieId = theSourceIntent.getStringExtra(getString(R.string.id_label));
         Log.e("WHERE",(movieId + "/" + paramValueTrailers));
-        URL theTrailerURL = buildTheTrailerURL(movieId, paramValueTrailers);
+        URL theTrailerURL = buildTheCustomURL(movieId, paramValueTrailers);
+        URL theReviewURL = buildTheCustomURL(movieId, paramValueReviews);
         if(RestfulUtilities.isConnected((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE))){
-            new GetTrailerTask().execute(theTrailerURL);
+            new GetTrailerTask().execute(theTrailerURL,
+                    theReviewURL);
         }else{
             Toast.makeText(this, R.string.network_unavailable_error, Toast.LENGTH_LONG).show();
         }
@@ -130,7 +135,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
         mTrailersRecyclerView.setAdapter(trailerAdapter);
     }
 
-    public URL buildTheTrailerURL(String pathParam1, String pathParam2){
+    public URL buildTheCustomURL(String pathParam1, String pathParam2){
         return RestfulUtilities.buildTrailerUrlWithKey(
                 BASE_REST_URL,
                 pathParam1,
@@ -143,26 +148,36 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
 
     @SuppressLint("StaticFieldLeak")
-    public class GetTrailerTask extends AsyncTask<URL, Void, String> {
+    public class GetTrailerTask extends AsyncTask<URL, Void, String[]> {
 
         @Override
-        protected String doInBackground(URL... urls) {
-            URL fullURL = urls[0];
-            String theMovieResults = null;
+        protected String[] doInBackground(URL... urls) {
+            URL fullTrailerURL = urls[0];
+            URL fullReviewURL = urls[1];
+            String theTrailerResults= null;
+            String theReviewResults = null;
             try {
-                theMovieResults = RestfulUtilities.getMovieResponse(fullURL);
+                theTrailerResults = RestfulUtilities.getMovieResponse(fullTrailerURL);
+                theReviewResults = RestfulUtilities.getMovieResponse(fullReviewURL);
             }catch (Exception e){
                 e.printStackTrace();
             }
-            return theMovieResults;
+            return new String[]{theTrailerResults, theReviewResults};
         }
 
         @Override
-        protected void onPostExecute(String s) {
-            if(s!=null && !s.equals("")){
-                trailers = JsonUtilities.getTrailersFromJSON(s);
+        protected void onPostExecute(String[] responses) {
+            String trailerString = responses[0];
+            if(trailerString!=null && !trailerString.equals("")){
+                trailers = JsonUtilities.getTrailersFromJSON(trailerString);
                 trailerAdapter.setTrailers(trailers);
                 trailerAdapter.notifyDataSetChanged();
+            }
+            String reviewString = responses[1];
+            if(reviewString!=null && !reviewString.equals("")){
+                reviews = JsonUtilities.getReviewsFromJSON(reviewString);
+//                reviewAdapter.setReview(reviews);
+//                reviewAdapter.notifyDataSetChanged();
             }
         }
     }

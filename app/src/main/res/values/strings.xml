@@ -27,5 +27,6 @@
     <string name="trailer_image_file_name">/0.jpg</string>
     <string name="value_trailers">videos</string>
     <string name="base_trailer_youtube_url">http://www.youtube.com/watch?v=</string>
+    <string name="value_reviews">reviews</string>
     <string name="api_key">PLEASE_INSERT_YOUR_KEY_HERE</string>
 </resources>

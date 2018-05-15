@@ -71,4 +71,15 @@ public class JsonUtilities {
         }
         return null;
     }
+
+    public static ArrayList<String> getReviewsFromJSON(String json){
+        ArrayList<String> reviews;
+        try {
+            JSONObject responseObject = new JSONObject(json);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return new ArrayList<>();
+    }
 }

@@ -28,5 +28,8 @@
     <string name="value_trailers">videos</string>
     <string name="base_trailer_youtube_url">http://www.youtube.com/watch?v=</string>
     <string name="value_reviews">reviews</string>
+    <string name="base_review_image_url">tesmp</string>
+    <string name="movie_reviews_label">Movie Reviews</string>
+    <string name="movie_trailers_label">Trailers</string>
     <string name="api_key">PLEASE_INSERT_YOUR_KEY_HERE</string>
 </resources>

@@ -3,6 +3,7 @@ package com.computecrib.android.popularmovies.utilities;
 import android.util.Log;
 
 import com.computecrib.android.popularmovies.Movie;
+import com.computecrib.android.popularmovies.Review;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -72,14 +73,25 @@ public class JsonUtilities {
         return null;
     }
 
-    public static ArrayList<String> getReviewsFromJSON(String json){
-        ArrayList<String> reviews;
+    public static ArrayList<Review> getReviewsFromJSON(String json){
+        ArrayList<Review> reviews;
         try {
             JSONObject responseObject = new JSONObject(json);
+            JSONArray resultsJSONArray = responseObject.getJSONArray("results");
+            reviews = new ArrayList<>();
+
+            for(int i = 0; i<resultsJSONArray.length(); i++){
+                JSONObject reviewObject = resultsJSONArray.getJSONObject(i);
+                String author = reviewObject.getString("author");
+                String content = reviewObject.getString("content");
+                reviews.add(new Review(author, content));
+            }
+
+            return reviews;
         }catch(Exception e){
             e.printStackTrace();
         }
 
-        return new ArrayList<>();
+        return null;
     }
 }

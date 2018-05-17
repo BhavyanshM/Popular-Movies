@@ -46,6 +46,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
     @BindView(R.id.tv_movie_release_date) TextView mReleaseDateTextView;
     @BindView(R.id.ib_fav_button) ImageButton mFavButton;
     @BindView(R.id.rv_trailers) RecyclerView mTrailersRecyclerView;
+    @BindView(R.id.rv_reviews) RecyclerView mReviewRecyclerView;
 
     @BindString(R.string.base_rest_url) String BASE_REST_URL;
     @BindString(R.string.param_api_key) String PARAM_API_KEY;
@@ -63,8 +64,9 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private String movieId;
 
     private List<String> trailers;
-    private List<String> reviews;
+    private List<Review> reviews;
     private TrailersRecyclerAdapter trailerAdapter;
+    private ReviewsRecyclerAdapter reviewAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,6 +135,11 @@ public class MovieDetailsActivity extends AppCompatActivity {
         trailerAdapter = new TrailersRecyclerAdapter(this, trailers);
         mTrailersRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         mTrailersRecyclerView.setAdapter(trailerAdapter);
+
+        reviewAdapter = new ReviewsRecyclerAdapter(this, reviews);
+        mReviewRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        mReviewRecyclerView.setAdapter(reviewAdapter);
+        mReviewRecyclerView.setNestedScrollingEnabled(false);
     }
 
     public URL buildTheCustomURL(String pathParam1, String pathParam2){
@@ -176,8 +183,8 @@ public class MovieDetailsActivity extends AppCompatActivity {
             String reviewString = responses[1];
             if(reviewString!=null && !reviewString.equals("")){
                 reviews = JsonUtilities.getReviewsFromJSON(reviewString);
-//                reviewAdapter.setReview(reviews);
-//                reviewAdapter.notifyDataSetChanged();
+                reviewAdapter.setReviews(reviews);
+                reviewAdapter.notifyDataSetChanged();
             }
         }
     }

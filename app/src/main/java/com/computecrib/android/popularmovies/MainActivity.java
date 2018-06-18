@@ -68,9 +68,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 //        URL theMovieURL = buildTheMovieURL(PATH_PARAM_POPULAR);
 //        mSortOrderTextView.setText(R.string.popular_label);
 //        mSortState = getString(R.string.popular_label);
-        if(savedInstanceState != null){
-            Toast.makeText(this, "onCreate("+savedInstanceState.getString("STATE")+")", Toast.LENGTH_SHORT).show();
-        }
+//        if(savedInstanceState != null){
+//            Toast.makeText(this, "onCreate("+savedInstanceState.getString("STATE")+")", Toast.LENGTH_SHORT).show();
+//        }
 //        if(RestfulUtilities.isConnected((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE))){
 //            new GetMovieTask().execute(theMovieURL);
 //        }else{

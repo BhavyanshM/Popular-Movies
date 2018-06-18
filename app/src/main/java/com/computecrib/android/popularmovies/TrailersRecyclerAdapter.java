@@ -61,10 +61,18 @@ public class TrailersRecyclerAdapter extends RecyclerView.Adapter<TrailersRecycl
         @Override
         public void onClick(View view) {
             Context viewContext = view.getContext();
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(
+                    viewContext.getString(R.string.base_trailer_youtube_brower_url) +
+                            trailers.get(getAdapterPosition())));
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(
                     viewContext.getString(R.string.base_trailer_youtube_url) +
                             trailers.get(getAdapterPosition())));
-            viewContext.startActivity(intent);
+
+            try{
+                viewContext.startActivity(intent);
+            }catch(Exception e){
+                viewContext.startActivity(browserIntent);
+            }
         }
     }
 }

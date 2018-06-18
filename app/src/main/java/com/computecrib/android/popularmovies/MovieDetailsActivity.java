@@ -132,7 +132,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
                     int nDeleted = getContentResolver().delete(MovieContract.MovieEntry.CONTENT_URI,
                             MovieContract.MovieEntry.COLUMN_MOVIE_ID + " = " + movieId,
                             null);
-                    Toast.makeText(MovieDetailsActivity.this, "DELETED:" + movieId + " n=" + nDeleted, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MovieDetailsActivity.this, "REMOVED (" + titleText + ")", Toast.LENGTH_SHORT).show();
                 }else{
                     ContentValues cv = new ContentValues();
                     cv.put(MovieContract.MovieEntry.COLUMN_MOVIE_NAME, titleText);
@@ -145,7 +145,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
                     Uri uri = getContentResolver().insert(MovieContract.MovieEntry.CONTENT_URI, cv);
 
                     if(uri!=null){
-                        Toast.makeText(MovieDetailsActivity.this, uri.toString(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MovieDetailsActivity.this, "ADDED (" + titleText + ")", Toast.LENGTH_SHORT).show();
                     }
                     
                     mFavButton.setBackground(getResources().getDrawable(R.drawable.fav_button_on));

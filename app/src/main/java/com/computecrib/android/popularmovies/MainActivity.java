@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -48,21 +49,68 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private String pathParam;
     private List<Movie> movies;
     private MoviesRecyclerAdapter adapter;
+    private String mSortState;
     private static final int FAVORITE_MOVIES_LOADER = 100;
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("STATE", mSortState);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-
         movies = new ArrayList<>();
-        URL theMovieURL = buildTheMovieURL(PATH_PARAM_POPULAR);
-        mSortOrderTextView.setText(R.string.popular_label);
-        if(RestfulUtilities.isConnected((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE))){
-            new GetMovieTask().execute(theMovieURL);
-        }else{
-            Toast.makeText(this, R.string.network_unavailable_error, Toast.LENGTH_LONG).show();
+        getLoaderManager().initLoader(FAVORITE_MOVIES_LOADER, null, this);
+//        URL theMovieURL = buildTheMovieURL(PATH_PARAM_POPULAR);
+//        mSortOrderTextView.setText(R.string.popular_label);
+//        mSortState = getString(R.string.popular_label);
+        if(savedInstanceState != null){
+            Toast.makeText(this, "onCreate("+savedInstanceState.getString("STATE")+")", Toast.LENGTH_SHORT).show();
+        }
+//        if(RestfulUtilities.isConnected((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE))){
+//            new GetMovieTask().execute(theMovieURL);
+//        }else{
+//            Toast.makeText(this, R.string.network_unavailable_error, Toast.LENGTH_LONG).show();
+//        }
+        URL theMovieURL;
+        String theOrderState = getString(R.string.popular_label);
+        if(savedInstanceState != null){
+            theOrderState = savedInstanceState.getString("STATE");
+        }if(theOrderState == null){
+            theOrderState = getString(R.string.popular_label);
+        }
+
+        switch (theOrderState){
+            case "Top Rated":
+                theMovieURL = buildTheMovieURL(PATH_PARAM_TOP_RATED);
+                mSortOrderTextView.setText(R.string.top_rated_label);
+                mSortState = getString(R.string.top_rated_label);
+                if(RestfulUtilities.isConnected((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE))){
+                    new GetMovieTask().execute(theMovieURL);
+                }else{
+                    Toast.makeText(this, R.string.network_unavailable_error, Toast.LENGTH_LONG).show();
+                }
+                break;
+
+            case "Popular":
+                theMovieURL = buildTheMovieURL(PATH_PARAM_POPULAR);
+                mSortOrderTextView.setText(R.string.popular_label);
+                mSortState = getString(R.string.popular_label);
+                if(RestfulUtilities.isConnected((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE))){
+                    new GetMovieTask().execute(theMovieURL);
+                }else{
+                    Toast.makeText(this, R.string.network_unavailable_error, Toast.LENGTH_LONG).show();
+                }
+                break;
+
+            case "Favorite":
+                mSortOrderTextView.setText(R.string.favorite_sort_label);
+                mSortState = getString(R.string.favorite_sort_label);
+                getLoaderManager().restartLoader(FAVORITE_MOVIES_LOADER, null, this);
         }
 
         GridLayoutManager grid = new GridLayoutManager(this, 2);
@@ -97,6 +145,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             case R.id.option_sort_top_rated:
                 theMovieURL = buildTheMovieURL(PATH_PARAM_TOP_RATED);
                 mSortOrderTextView.setText(R.string.top_rated_label);
+                mSortState = getString(R.string.top_rated_label);
                 if(RestfulUtilities.isConnected((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE))){
                     new GetMovieTask().execute(theMovieURL);
                 }else{
@@ -106,6 +155,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             case R.id.option_sort_popularity:
                 theMovieURL = buildTheMovieURL(PATH_PARAM_POPULAR);
                 mSortOrderTextView.setText(R.string.popular_label);
+                mSortState = getString(R.string.popular_label);
                 if(RestfulUtilities.isConnected((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE))){
                     new GetMovieTask().execute(theMovieURL);
                 }else{
@@ -114,7 +164,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 break;
             case R.id.option_sort_favorites:
                 mSortOrderTextView.setText(R.string.favorite_sort_label);
-                getLoaderManager().initLoader(FAVORITE_MOVIES_LOADER, null, this);
+                mSortState = getString(R.string.favorite_sort_label);
+                getLoaderManager().restartLoader(FAVORITE_MOVIES_LOADER, null, this);
         }
         return true;
     }
@@ -147,6 +198,13 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             adapter.setMovies(favMovies);
             adapter.notifyDataSetChanged();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+//        getLoaderManager().initLoader(FAVORITE_MOVIES_LOADER, null, this);
+//        onCreate();
     }
 
     @Override

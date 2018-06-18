@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -87,9 +88,24 @@ public class MovieDetailsActivity extends AppCompatActivity {
         }else{
             Toast.makeText(this, R.string.network_unavailable_error, Toast.LENGTH_LONG).show();
         }
-
+        String[] mProjection = {MovieContract.MovieEntry.COLUMN_MOVIE_ID, MovieContract.MovieEntry.COLUMN_MOVIE_NAME};
+        Cursor cursor = getContentResolver().query(MovieContract.MovieEntry.CONTENT_URI,
+                mProjection,
+                MovieContract.MovieEntry.COLUMN_MOVIE_ID + "=?",
+                new String[]{movieId},
+                null);
         isFavorite = false;
+        mFavButton.setBackground(getResources().getDrawable(R.drawable.fav_button_off));
+        String queryResult = "";
+        if(cursor!=null && cursor.getCount()>0){
+            isFavorite = true;
+            mFavButton.setBackground(getResources().getDrawable(R.drawable.fav_button_on));
+            while(cursor.moveToNext()){
+                queryResult = cursor.getString(1) + " id:" + cursor.getString(0) ;
+            }
+        }
 
+//        Toast.makeText(this, queryResult, Toast.LENGTH_LONG).show();
 
         mTitleTextView.setText(theSourceIntent.getStringExtra(getString(R.string.title_label)));
         mDescriptionTextView.setText(theSourceIntent.getStringExtra(getString(R.string.description_label)));
@@ -105,12 +121,18 @@ public class MovieDetailsActivity extends AppCompatActivity {
         releaseDateText = theSourceIntent.getStringExtra(getString(R.string.release_date_label));
         posterPathText = theSourceIntent.getStringExtra(getString(R.string.poster_path_label));
 
+
+
         mFavButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(isFavorite){
                     mFavButton.setBackground(getResources().getDrawable(R.drawable.fav_button_off));
                     isFavorite = false;
+                    int nDeleted = getContentResolver().delete(MovieContract.MovieEntry.CONTENT_URI,
+                            MovieContract.MovieEntry.COLUMN_MOVIE_ID + " = " + movieId,
+                            null);
+                    Toast.makeText(MovieDetailsActivity.this, "DELETED:" + movieId + " n=" + nDeleted, Toast.LENGTH_SHORT).show();
                 }else{
                     ContentValues cv = new ContentValues();
                     cv.put(MovieContract.MovieEntry.COLUMN_MOVIE_NAME, titleText);

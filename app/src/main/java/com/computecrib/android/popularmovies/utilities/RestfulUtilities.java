@@ -13,7 +13,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
 
-public class RestfulUtilities {
+public final class RestfulUtilities {
 
 
 

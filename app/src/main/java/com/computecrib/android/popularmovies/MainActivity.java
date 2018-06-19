@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.os.Parcelable;
 import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -50,12 +51,29 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private List<Movie> movies;
     private MoviesRecyclerAdapter adapter;
     private String mSortState;
+    private Parcelable recyclerSavedState;
+    private GridLayoutManager grid;
+
     private static final int FAVORITE_MOVIES_LOADER = 100;
+    private static final String BUNDLE_RV_LAYOUT_LABEL = "recycler_layout";
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString("STATE", mSortState);
+        //Courtesy: https://stackoverflow.com/questions/27816217/how-to-save-recyclerviews-scroll-position-using-recyclerview-state
+        //Date: 06/18/2018
+        outState.putParcelable(BUNDLE_RV_LAYOUT_LABEL, grid.onSaveInstanceState());
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        //Courtesy: https://stackoverflow.com/questions/27816217/how-to-save-recyclerviews-scroll-position-using-recyclerview-state
+        //Date: 06/18/2018
+        if(savedInstanceState != null){
+            recyclerSavedState = savedInstanceState.getParcelable(BUNDLE_RV_LAYOUT_LABEL);
+        }
     }
 
     @Override
@@ -65,17 +83,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         ButterKnife.bind(this);
         movies = new ArrayList<>();
         getLoaderManager().initLoader(FAVORITE_MOVIES_LOADER, null, this);
-//        URL theMovieURL = buildTheMovieURL(PATH_PARAM_POPULAR);
-//        mSortOrderTextView.setText(R.string.popular_label);
-//        mSortState = getString(R.string.popular_label);
-//        if(savedInstanceState != null){
-//            Toast.makeText(this, "onCreate("+savedInstanceState.getString("STATE")+")", Toast.LENGTH_SHORT).show();
-//        }
-//        if(RestfulUtilities.isConnected((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE))){
-//            new GetMovieTask().execute(theMovieURL);
-//        }else{
-//            Toast.makeText(this, R.string.network_unavailable_error, Toast.LENGTH_LONG).show();
-//        }
+
         URL theMovieURL;
         String theOrderState = getString(R.string.popular_label);
         if(savedInstanceState != null){
@@ -113,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 getLoaderManager().restartLoader(FAVORITE_MOVIES_LOADER, null, this);
         }
 
-        GridLayoutManager grid = new GridLayoutManager(this, 2);
+        grid = new GridLayoutManager(this, 2);
 
         moviesRecyclerView.setLayoutManager(grid);
         adapter = new MoviesRecyclerAdapter(this, movies);
@@ -197,6 +205,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             }
             adapter.setMovies(favMovies);
             adapter.notifyDataSetChanged();
+            if(recyclerSavedState != null){
+                grid.onRestoreInstanceState(recyclerSavedState);
+            }
         }
     }
 
@@ -232,7 +243,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 movies = JsonUtilities.getMoviesFromJSON(s);
                 adapter.setMovies(movies);
                 adapter.notifyDataSetChanged();
+                if(recyclerSavedState != null){
+                    grid.onRestoreInstanceState(recyclerSavedState);
+                }
             }
         }
+
+
     }
 }

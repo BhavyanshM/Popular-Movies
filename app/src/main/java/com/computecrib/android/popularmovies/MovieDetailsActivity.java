@@ -11,6 +11,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -23,6 +24,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
+import android.widget.Scroller;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -68,10 +72,13 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private List<Review> reviews;
     private TrailersRecyclerAdapter trailerAdapter;
     private ReviewsRecyclerAdapter reviewAdapter;
+    private Parcelable rvSavedState;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_movie_details);
         ButterKnife.bind(this);
         Intent theSourceIntent = getIntent();
@@ -159,9 +166,12 @@ public class MovieDetailsActivity extends AppCompatActivity {
         mTrailersRecyclerView.setAdapter(trailerAdapter);
 
         reviewAdapter = new ReviewsRecyclerAdapter(this, reviews);
-        mReviewRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        mReviewRecyclerView.setLayoutManager(linearLayoutManager);
         mReviewRecyclerView.setAdapter(reviewAdapter);
         mReviewRecyclerView.setNestedScrollingEnabled(false);
+
+
     }
 
     public URL buildTheCustomURL(String pathParam1, String pathParam2){

@@ -10,7 +10,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class JsonUtilities {
+public final class JsonUtilities {
 
     public static ArrayList<Movie> getMoviesFromJSON(String json){
         String title;
